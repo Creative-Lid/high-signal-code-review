@@ -1,0 +1,4 @@
+interface:
+  display_name: "High-Signal Code Review"
+  short_description: "Find proven defects and write concise review comments"
+  default_prompt: "Use $high-signal-code-review on the current repository."
