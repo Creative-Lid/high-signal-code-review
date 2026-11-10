@@ -12,20 +12,31 @@ Add `-g` to install it globally, or use the interactive installer to choose an a
 
 ## Use
 
-Invoke the skill without additional instructions and it will infer the review scope from Git state:
+Invoke the skill without additional instructions to review the checked-out branch against its merge target:
 
 ```text
 /high-signal-code-review
 ```
 
-- A dirty working tree reviews staged, unstaged, and relevant untracked changes.
-- A clean working tree compares the current branch with the repository's default target branch.
-- An explicit scope or target overrides inference.
+- The default scope compares committed changes on the checked-out branch with the merge target, usually the repository's default branch.
+- Staged, unstaged, and untracked files are excluded from the default branch review, even when the working tree is dirty.
+- Ask for `staged`, `uncommitted`, `local`, or `pre-commit` review when that is the intended scope.
+- Repository instruction files such as `AGENTS.md` are context, not review targets, unless explicitly named.
+- Any explicit commit, range, pull request, scope, or target overrides inference.
+
+Before analyzing the diff, the skill reports the resolved review mode and exact snapshots. A branch review includes the head, target, merge base, and exclusion of local changes; self-review identifies the `HEAD`, index, and working-tree scope. It then reads and cites files from those snapshots, so unrelated edits cannot shift line numbers or change the code being reviewed.
+
+This makes PR review the default while keeping self-review explicit and convenient:
+
+- `/high-signal-code-review` reviews the checked-out PR or feature branch.
+- `/high-signal-code-review local` reviews your staged, unstaged, and relevant untracked work.
+- `/high-signal-code-review staged` reviews only what is currently in the index.
 
 Examples:
 
 ```text
 /high-signal-code-review staged
+/high-signal-code-review uncommitted
 /high-signal-code-review against main
 /high-signal-code-review compare to development
 ```
